@@ -11,8 +11,6 @@ const EditScreen = ({ navigation }) => {
         gamePost => gamePost.id === navigation.getParam('id')
     );
 
-    
-
     return <GamePostForm 
         initValues={{title: gamePost.title}}
         onSubmit={

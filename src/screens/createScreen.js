@@ -7,9 +7,9 @@ const CreateScreen = ({ navigation }) => {
     const { state, addGamePost } = useContext(GameContext);
 
     return <GamePostForm onSubmit={(title) => {
-        addGamePost(title);
-        navigation.navigate('Index');
-    }}/>
+                addGamePost(title);
+                navigation.navigate('Index');}}
+           />
 };
 
 export default CreateScreen;

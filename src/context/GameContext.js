@@ -4,13 +4,15 @@ const gameReducer = (state, action) => {
     switch(action.type) {
         case  'add_gamepost':
             return [...state, { id: Math.floor(Math.random() * 999), title: action.payload }];
+
         case  'edit_gamepost':
-            
                 return state.map((gamePost) => {
                     return gamePost.id === action.payload.id ? action.payload : gamePost;
                 });
+
         case  'delete_gamepost':
                 return state.filter((gamePost) => gamePost.id !== action.payload);
+                
         default:
             return state;
     }
