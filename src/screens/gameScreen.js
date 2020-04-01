@@ -1,28 +1,67 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from 'react-native';
 import { Context as GameContext } from '../context/GameContext';
 import { EvilIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 const GameScreen = ({ navigation }) => {
-    const { state } = useContext(GameContext);
+    const { state, getGameTopics, deleteGameTopic } = useContext(GameContext);
 
-    const gamePost = state.find((gamePost) => gamePost.id === navigation.getParam('id'))
+    useEffect(() => {
+        getGameTopics(gamePost._id);
+    }, []);
 
+    const gamePost = state.find((gamePost) => gamePost._id === navigation.getParam('id'));
+
+    console.log('gamescreen state: ' , gamePost);
     return (
         <View>
-            <Text>The notes for {gamePost.title} will be available to be posted here soon</Text>
+            <FlatList
+                data={gamePost.topics}
+                keyExtractor={(gamePost) => gamePost.title}
+                renderItem={({item}) => {
+                    return (
+                        <View style={styles.row}>
+                            <TouchableOpacity onPress={() => navigation.navigate('Edit', { id: gamePost._id, topicTitle: item.title, previusScreen: 'gameScreen' })}>
+                                <Text style={styles.title}>{item.title}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => { deleteGameTopic(gamePost._id, item.title) }}>
+                                <Feather style={styles.icon} name="trash" />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }}
+            />
         </View>
-    );
+    ); 
 };
 
+
+
 const styles = StyleSheet.create({
-    
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        borderTopWidth: 1,
+        borderColor: 'gray'
+    },
+    title: {
+        fontSize: 18
+    },
+    icon: {
+        fontSize: 24
+    }
 });
 
 GameScreen.navigationOptions = ({ navigation }) => {
     return {
-        headerRight: <TouchableOpacity onPress={() => navigation.navigate('Edit', {id: navigation.getParam('id')})}>
+        title: 'Topics',
+        headerRight: <TouchableOpacity onPress={() => navigation.navigate('Edit', { id: navigation.getParam('id') }) }>
+                        <View paddingRight={16}>
                             <EvilIcons name='pencil' size={30} />
+                        </View>
                     </TouchableOpacity>
     }
 }

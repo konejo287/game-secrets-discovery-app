@@ -1,24 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from 'react-native';
 import { Context as GameContext } from '../context/GameContext';
 import { Feather } from '@expo/vector-icons';
 
 const IndexScreen = ({ navigation }) => {
-    const { state, addGamePost, deleteGamePost } = useContext(GameContext);
+    const { state, getGameList, deleteGamePost } = useContext(GameContext);
+
+    useEffect(() => {
+        getGameList()
+    }, []);
 
     return (
         <View>
-            <Text>Agrega un Video juego!</Text>
             <FlatList
                 data={state}
-                keyExtractor={(gamePosts) => gamePosts.title}
+                keyExtractor={(state) => state.title}
                 renderItem={({item}) => {
                     return (
                         <View style={styles.row}>
-                            <TouchableOpacity onPress={() => navigation.navigate('Game', { id: item.id })}>
+                            <TouchableOpacity onPress={() => navigation.navigate('Game', { id: item._id })}>
                                 <Text style={styles.title}>{item.title}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => deleteGamePost(item.id)}>
+                            <TouchableOpacity onPress={() => deleteGamePost(item._id)}>
                                 <Feather style={styles.icon} name="trash" />
                             </TouchableOpacity>
                         </View>
@@ -32,8 +35,10 @@ const IndexScreen = ({ navigation }) => {
 IndexScreen.navigationOptions = ({ navigation }) => {
     return {
         headerRight: <TouchableOpacity onPress={() => navigation.navigate('Create')}>
-                            <Feather name='plus' size={30} />
-                    </TouchableOpacity>
+                         <View paddingRight={16}>
+                             <Feather name='plus' size={30} />
+                         </View>
+                     </TouchableOpacity>
     }
 }
 

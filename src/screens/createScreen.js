@@ -6,9 +6,9 @@ import GamePostForm from '../components/GamePostForm';
 const CreateScreen = ({ navigation }) => {
     const { state, addGamePost } = useContext(GameContext);
 
-    return <GamePostForm onSubmit={(title) => {
-                addGamePost(title);
-                navigation.navigate('Index');}}
+    return <GamePostForm onSubmit={(gameId, title) => {
+                addGamePost(title, () => { navigation.navigate('Index') });
+            }}
            />
 };
 
