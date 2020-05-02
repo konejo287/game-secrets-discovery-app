@@ -5,15 +5,17 @@ import { EvilIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
 const GameScreen = ({ navigation }) => {
-    const { state, getGameTopics, deleteGameTopic } = useContext(GameContext);
+    const { state, getGameTopics, deleteGameTopic, addGameTopic, editTopicNotes } = useContext(GameContext);
 
     useEffect(() => {
         getGameTopics(gamePost._id);
     }, []);
 
     const gamePost = state.find((gamePost) => gamePost._id === navigation.getParam('id'));
+    const localState = navigation.getParam('paramLocalState');
 
     console.log('gamescreen state: ' , gamePost);
+    console.log('GAME SCREEN localState: ' , localState);
     return (
         <View>
             <FlatList
@@ -22,7 +24,17 @@ const GameScreen = ({ navigation }) => {
                 renderItem={({item}) => {
                     return (
                         <View style={styles.row}>
-                            <TouchableOpacity onPress={() => navigation.navigate('Edit', { id: gamePost._id, topicTitle: item.title, previusScreen: 'gameScreen' })}>
+                            <TouchableOpacity onPress={() => 
+                                                navigation.navigate('Edit', 
+                                                { 
+                                                    id: gamePost._id, 
+                                                    topicTitle: item.title, 
+                                                    previusScreen: 'gameScreen', 
+                                                    editTopicNotes: editTopicNotes, 
+                                                    addGameTopic: addGameTopic,
+                                                    content: item.content
+                                                })
+                                              }>
                                 <Text style={styles.title}>{item.title}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => { deleteGameTopic(gamePost._id, item.title) }}>

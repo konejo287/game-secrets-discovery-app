@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { Context as GameContext } from '../context/GameContext';
 
-const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail }) => {
-    const { addGamePost } = useContext(GameContext);
+const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation }) => {
+    const { state, addGamePost } = useContext(GameContext);
     
     const [title, setTitle] = useState('');
     const [content, setContent] = useState(topicDetail !== undefined ? topicDetail.content : '');
 
-    console.log('Game post forms: ' , content, title);
+    //console.log('Game post forms: ' , content, title, previusScreen);
 
     function UselessTextInput(props) {
         return (
@@ -19,34 +19,48 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail }) => {
           />
         );
       }
-
+    getNav = () => {
+        console.log('NAVIGATION: ' , navigation.state.params);
+    }
     return (
-        <View>
+        <View style={styles.postFormView}>
             <Text style={styles.label}>
-                { previusScreen == "editScreen" ? 'Add a New topic' : 'Enter the title'}
+                { previusScreen == "editScreen" ? 'Add a New topic' : 'Enter the Game title'}
             </Text>
             {
                 previusScreen == "gameScreen" ?
-                
-                <TextInput
-                    multiline
-                    numberOfLines={300}
-                    onChangeText={(content) => setContent(content)}
-                    value={content}
-                    style={styles.multiText}
-                    editable
-                    maxLength={4000}
-                />
-                
+                <View style={styles.backgroundStyleMulti}>
+                    <TextInput
+                        multiline
+                        numberOfLines={300}
+                        onChangeText={(content) => {
+                            navigation.setParams({content: content });
+                            getNav();
+                            setContent(content)
+                        }}
+                        value={content}
+                        style={styles.multiText}
+                        editable
+                        maxLength={4000}
+                    />
+                </View>
                 : 
-                
-                <TextInput style={styles.input} value={title} onChangeText={(title) => setTitle(title)} />
+                <View style={styles.backgroundStyle}>
+                    <TextInput 
+                        placeholder="Tap here"
+                        style={styles.input}
+                        value={title}
+                        onChangeText={ (title) => setTitle(title) } 
+                    />
+                </View>
             }
-            { console.log('repeat') }
-            <Button title='Save' onPress={() => {
-                onSubmit(gameId, title || topicDetail.title, content);
-            }}>
-            </Button>
+            <TouchableOpacity 
+                style={styles.touchableSaveBtn} 
+                onPress={() => {
+                    onSubmit(gameId, title || topicDetail.title, content);
+                }}>
+                <Text style={styles.touchableSaveBtnText}>SAVE</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -63,33 +77,76 @@ GamePostForm.defaultProps = {
 }
 
 const styles = StyleSheet.create({
+    backgroundStyleMulti: {
+        backgroundColor: '#F0EEEE',
+        height: '80%',
+        borderRadius: 5,
+        flexDirection: 'row',
+        marginBottom: 15
+    },
+    backgroundStyle: {
+        backgroundColor: '#F0EEEE',
+        height: 50,
+        borderRadius: 5,
+        flexDirection: 'row',
+        marginBottom: 15
+    },
+    postFormView: {
+        width: '95%',
+        alignItems: 'stretch',
+        marginHorizontal: 10
+    },
     input: {
         fontSize: 18,
-        borderWidth: 1,
-        borderColor: 'black'
+        paddingLeft: 10
     },
     multiText: {
-        backgroundColor: 'white',
-        width: 600, 
-        height: 600,
-        borderColor: 'black',
+        width: '100%', 
+        height: '85%',
         fontSize: 18,
         textAlignVertical: "top",
-        borderColor: 'black',
-        borderWidth: 2,
+        padding: 10,
+        marginBottom: 10
     },
     label: {
         fontSize: 20,
-        marginBottom: 10
+        marginVertical: 15
+    },
+    touchableSaveBtn: {
+        alignItems: "center",
+        backgroundColor: "#0099ff",
+        padding: 10,
+        borderRadius: 5
+    },
+    touchableSaveBtnText: {
+        color: "#ffffff",
+        fontWeight: '600',
+        fontSize: 17
+    },
+    icon: {
+        fontSize: 24
     }
 });
 
-/*GamePostForm.navigationOptions = ({ navigation }) => {
-    return {
-        headerRight: <TouchableOpacity onPress={() => navigation.navigate('Create')}>
-                            <EvilIcons name='pencil' size={30} />
-                    </TouchableOpacity>
+GamePostForm.navigationOptions = (props) => {
+    
+    const testFunc = () => {
+        console.log('EDIT SCREEN NAVIGATOR: ' , props.navigation);
     }
-}*/
+
+    return {
+        title: "Game Notes",
+        headerRight: <TouchableOpacity 
+                        onPress={() =>  {
+                                testFunc()
+                                //onSubmit(gameId, title || topicDetail.title, content)
+                            }
+                        }>
+                         <View paddingRight={16}>
+                             <Ionicons name='md-checkmark' style={styles.icon} size={30} />
+                         </View>
+                     </TouchableOpacity>
+    }
+}
 
 export default GamePostForm;

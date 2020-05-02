@@ -79,6 +79,7 @@ const getGameList = (dispatch) => {
     return async () => {
        const gameList = await gameAPI.get('games');
        dispatch({ type: 'game_list', payload: gameList });
+       return gameList.data;
     }
     
 };
@@ -92,6 +93,7 @@ const getGameTopics = (dispatch) => {
             }}
         );
         dispatch({ type: 'game_topic_list', payload: gameTopicList.data });
+        //return gameTopicList.data;
     }
 }
 
