@@ -3,7 +3,6 @@
     "name": "game-secrets-discovery-app",
     "slug": "game-secrets-discovery-app",
     "privacy": "public",
-    "sdkVersion": "35.0.0",
     "platforms": [
       "ios",
       "android",
