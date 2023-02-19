@@ -1,30 +1,40 @@
 import React from 'react';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import IndexScreen from './src/screens/indexScreen';
 import { Provider } from './src/context/GameContext';
 import GameScreen from './src/screens/gameScreen';
 import CreateScreen from './src/screens/createScreen';
 import EditScreen from './src/screens/editScreen';
 
-const navigator = createStackNavigator({
-  Index: IndexScreen,
-  Game: GameScreen,
-  Create: CreateScreen,
-  Edit: EditScreen
-}, {
-  initialRouteName: 'Index',
-  defaultNavigationOptions: {
-    title: 'Games'
-  }
-})
+import { View, Text, TouchableOpacity } from 'react-native';
 
-const App = createAppContainer(navigator);
+import { Feather } from '@expo/vector-icons';
+
+const Stack = createStackNavigator();
 
 export default () => {
   return (
     <Provider>
-      <App />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Index" component={IndexScreen}
+          options={({ navigation, route }) => ({
+            headerTitle: () => <Text>Game Notes</Text>,
+            headerRight: (props) => (
+              <TouchableOpacity onPress={() => navigation.navigate('Create')}>
+                  <View paddingRight={16}>
+                      <Feather name='plus' size={30} />
+                  </View>
+              </TouchableOpacity>
+            ),
+          })}
+          />
+          <Stack.Screen name="Game" component={GameScreen} />
+          <Stack.Screen name="Create" component={CreateScreen} />
+          <Stack.Screen name="Edit" component={EditScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 }

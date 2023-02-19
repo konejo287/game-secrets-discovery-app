@@ -133,13 +133,13 @@ const editGamePost = (dispatch) => {
 };
 
 export const { Context, Provider } = createDataContext(
-                gameReducer, { 
-                    addGamePost, 
-                    getGameList, 
-                    getGameTopics, 
-                    deleteGamePost,
-                    deleteGameTopic,
-                    editGamePost, 
-                    addGameTopic, 
-                    editTopicNotes 
-                }, []);
+gameReducer, {
+    addGamePost,
+    getGameList,
+    getGameTopics,
+    deleteGamePost,
+    deleteGameTopic,
+    editGamePost,
+    addGameTopic,
+    editTopicNotes
+}, []);

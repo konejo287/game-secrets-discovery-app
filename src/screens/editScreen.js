@@ -4,8 +4,8 @@ import { Context as GameContext } from '../context/GameContext';
 import { Ionicons } from '@expo/vector-icons';
 import GamePostForm from '../components/GamePostForm';
 
-const EditScreen = ({ navigation }) => {
-
+const EditScreen = ({ route, navigation }) => {
+    const { id, topicTitle, previusScreen, editScreen } = route.params;
     /*navigationOptions = {
     
         //const testFunc = () => {
@@ -29,10 +29,10 @@ const EditScreen = ({ navigation }) => {
 
     const { state, addGameTopic, editTopicNotes } = useContext(GameContext);
 
-    const gamePost = state.find((gamePost) => gamePost._id === navigation.getParam('id'));
+    const gamePost = state.find((gamePost) => gamePost._id === id);
    
 
-    const topicDetail = gamePost.topics.find((gamePostDetial) => gamePostDetial.title === navigation.getParam('topicTitle'));
+    const topicDetail = gamePost.topics.find((gamePostDetial) => gamePostDetial.title === topicTitle);
 
     //console.log('CHECKING ID');
     /*Object.keys(gamePost).forEach(function (item) {
@@ -40,8 +40,6 @@ const EditScreen = ({ navigation }) => {
     });*/
 
     
-
-    const previusScreen = navigation.getParam('previusScreen') || 'editScreen';
     /*console.log('editScreen state: ' , navigation.getParam('id'), gamePost, state);
     console.log('gamepostDetail: ' , topicDetail, previusScreen);*/
     return <GamePostForm
@@ -53,11 +51,11 @@ const EditScreen = ({ navigation }) => {
             (gameId, title, content) => {
                 console.log('EDIT SCREEN CHECKING ID: ' , gameId, content);
 
-                /*content !== ''?
+                content !== ''?
 
                 editTopicNotes(gamePost._id, title, content, () => {navigation.pop()})
                 : 
-                addGameTopic(gamePost._id, title, () => {navigation.pop()});*/
+                addGameTopic(gamePost._id, title, () => {navigation.pop()});
                 
             }
     }/>

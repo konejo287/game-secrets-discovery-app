@@ -4,16 +4,25 @@ import { Context as GameContext } from '../context/GameContext';
 import { EvilIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
-const GameScreen = ({ navigation }) => {
+const GameScreen = ({ route, navigation }) => {
+    const { id, paramLocalState } = route.params;
     const { state, getGameTopics, deleteGameTopic, addGameTopic, editTopicNotes } = useContext(GameContext);
 
     useEffect(() => {
         getGameTopics(gamePost._id);
     }, []);
 
-    const gamePost = state.find((gamePost) => gamePost._id === navigation.getParam('id'));
-    const localState = navigation.getParam('paramLocalState');
-
+    const gamePost = state.find((gamePost) => gamePost._id === id);
+    const localState = paramLocalState;
+    navigation.setOptions({
+        headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Edit', { id: id }) }>
+                <View paddingRight={16}>
+                    <EvilIcons name='pencil' size={30} />
+                </View>
+            </TouchableOpacity>),
+        title: gamePost.title
+    });
     console.log('gamescreen state: ' , gamePost);
     console.log('GAME SCREEN localState: ' , localState);
     return (
@@ -24,17 +33,18 @@ const GameScreen = ({ navigation }) => {
                 renderItem={({item}) => {
                     return (
                         <View style={styles.row}>
-                            <TouchableOpacity onPress={() => 
-                                                navigation.navigate('Edit', 
-                                                { 
-                                                    id: gamePost._id, 
-                                                    topicTitle: item.title, 
-                                                    previusScreen: 'gameScreen', 
-                                                    editTopicNotes: editTopicNotes, 
-                                                    addGameTopic: addGameTopic,
-                                                    content: item.content
-                                                })
-                                              }>
+                            <TouchableOpacity
+                                onPress={() =>
+                                navigation.navigate('Edit',
+                                    {
+                                        id: gamePost._id,
+                                        topicTitle: item.title,
+                                        previusScreen: 'gameScreen',
+                                        editTopicNotes: editTopicNotes,
+                                        addGameTopic: addGameTopic,
+                                        content: item.content
+                                    })
+                                }>
                                 <Text style={styles.title}>{item.title}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => { deleteGameTopic(gamePost._id, item.title) }}>

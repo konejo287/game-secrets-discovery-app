@@ -20,7 +20,7 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation
         );
       }
     getNav = () => {
-        console.log('NAVIGATION: ' , navigation.state.params);
+        //console.log('NAVIGATION: ' , navigation.state.params);
     }
     return (
         <View style={styles.postFormView}>
