@@ -8,7 +8,24 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation
     const [title, setTitle] = useState('');
     const [content, setContent] = useState(topicDetail !== undefined ? topicDetail.content : '');
 
-    //console.log('Game post forms: ' , content, title, previusScreen);
+    const checkSwitch = () => {
+      console.log("LOG previous screen: " , previusScreen);
+      switch(previusScreen) {
+        case "gameScreen":
+            return 'Add more notes to this topic';
+          break;
+
+        case "gameTopicsScreen":
+            return 'Add a New Topic to this game';
+          break;
+
+        case "indexScreen":
+            return 'Create a New Game';
+          break;
+
+         default: return null;
+      }
+    }
 
     function UselessTextInput(props) {
         return (
@@ -19,13 +36,13 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation
           />
         );
       }
-    getNav = () => {
-        //console.log('NAVIGATION: ' , navigation.state.params);
-    }
+
     return (
         <View style={styles.postFormView}>
             <Text style={styles.label}>
-                { previusScreen == "editScreen" ? 'Add a New topic' : 'Enter the Game title'}
+                {
+                  checkSwitch(previusScreen)
+                }
             </Text>
             {
                 previusScreen == "gameScreen" ?
@@ -35,7 +52,6 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation
                         numberOfLines={300}
                         onChangeText={(content) => {
                             navigation.setParams({content: content });
-                            getNav();
                             setContent(content)
                         }}
                         value={content}
@@ -57,6 +73,7 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation
             <TouchableOpacity 
                 style={styles.touchableSaveBtn} 
                 onPress={() => {
+                    if(previusScreen !== 'gameScreen' && !title) return;
                     onSubmit(gameId, title || topicDetail.title, content);
                 }}>
                 <Text style={styles.touchableSaveBtnText}>SAVE</Text>
@@ -98,7 +115,8 @@ const styles = StyleSheet.create({
     },
     input: {
         fontSize: 18,
-        paddingLeft: 10
+        paddingLeft: 10,
+        width: '100%'
     },
     multiText: {
         width: '100%', 
@@ -129,17 +147,11 @@ const styles = StyleSheet.create({
 });
 
 GamePostForm.navigationOptions = (props) => {
-    
-    const testFunc = () => {
-        console.log('EDIT SCREEN NAVIGATOR: ' , props.navigation);
-    }
-
     return {
         title: "Game Notes",
         headerRight: <TouchableOpacity 
                         onPress={() =>  {
                                 testFunc()
-                                //onSubmit(gameId, title || topicDetail.title, content)
                             }
                         }>
                          <View paddingRight={16}>

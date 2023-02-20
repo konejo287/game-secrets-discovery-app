@@ -6,10 +6,8 @@ import { Provider } from './src/context/GameContext';
 import GameScreen from './src/screens/gameScreen';
 import CreateScreen from './src/screens/createScreen';
 import EditScreen from './src/screens/editScreen';
-
-import { View, Text, TouchableOpacity } from 'react-native';
-
-import { Feather } from '@expo/vector-icons';
+import RightHeader from './src/components/RightHeader';
+import { Text } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -22,11 +20,15 @@ export default () => {
           options={({ navigation, route }) => ({
             headerTitle: () => <Text>Game Notes</Text>,
             headerRight: (props) => (
-              <TouchableOpacity onPress={() => navigation.navigate('Create')}>
-                  <View paddingRight={16}>
-                      <Feather name='plus' size={30} />
-                  </View>
-              </TouchableOpacity>
+              <RightHeader
+                navigation={navigation}
+                action={{
+                  route: 'Create',
+                  value: {
+                    previusScreen: 'indexScreen'
+                  }
+                }}
+                icon={'plus'} />
             ),
           })}
           />

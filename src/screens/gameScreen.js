@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from 'react-native';
 import { Context as GameContext } from '../context/GameContext';
-import { EvilIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import RightHeader from '../components/RightHeader';
+import SweetAlert from 'react-native-sweet-alert';
 
 const GameScreen = ({ route, navigation }) => {
     const { id, paramLocalState } = route.params;
@@ -16,15 +17,11 @@ const GameScreen = ({ route, navigation }) => {
     const localState = paramLocalState;
     navigation.setOptions({
         headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('Edit', { id: id }) }>
-                <View paddingRight={16}>
-                    <EvilIcons name='pencil' size={30} />
-                </View>
-            </TouchableOpacity>),
+          <RightHeader navigation={navigation} action={{route: 'Edit', value: { id, previusScreen: 'gameTopicsScreen' }}} icon={'plus'} />
+        ),
         title: gamePost.title
     });
-    console.log('gamescreen state: ' , gamePost);
-    console.log('GAME SCREEN localState: ' , localState);
+
     return (
         <View>
             <FlatList
@@ -47,7 +44,21 @@ const GameScreen = ({ route, navigation }) => {
                                 }>
                                 <Text style={styles.title}>{item.title}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { deleteGameTopic(gamePost._id, item.title) }}>
+                            <TouchableOpacity onPress={() => {
+                              SweetAlert.showAlertWithOptions({
+                                title: '',
+                                subTitle: '',
+                                confirmButtonTitle: 'OK',
+                                confirmButtonColor: '#000',
+                                otherButtonTitle: 'Cancel',
+                                otherButtonColor: '#dedede',
+                                style: 'success',
+                                cancellable: true
+                              },
+                                callback => console.log('callback'));
+                              //deleteGameTopic(gamePost._id, item.title)
+                            }}
+                              >
                                 <Feather style={styles.icon} name="trash" />
                             </TouchableOpacity>
                         </View>
@@ -57,8 +68,6 @@ const GameScreen = ({ route, navigation }) => {
         </View>
     ); 
 };
-
-
 
 const styles = StyleSheet.create({
     row: {
@@ -76,16 +85,5 @@ const styles = StyleSheet.create({
         fontSize: 24
     }
 });
-
-GameScreen.navigationOptions = ({ navigation }) => {
-    return {
-        title: 'Topics',
-        headerRight: <TouchableOpacity onPress={() => navigation.navigate('Edit', { id: navigation.getParam('id') }) }>
-                        <View paddingRight={16}>
-                            <EvilIcons name='pencil' size={30} />
-                        </View>
-                    </TouchableOpacity>
-    }
-}
 
 export default GameScreen;
