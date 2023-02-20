@@ -58,6 +58,7 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation
                         style={styles.multiText}
                         editable
                         maxLength={4000}
+                        placeholder={content ? "" : "Tap Here..."}
                     />
                 </View>
                 : 
@@ -70,8 +71,8 @@ const GamePostForm = ({ onSubmit, previusScreen, gameId, topicDetail, navigation
                     />
                 </View>
             }
-            <TouchableOpacity 
-                style={styles.touchableSaveBtn} 
+            <TouchableOpacity
+                style={styles.touchableSaveBtn}
                 onPress={() => {
                     if(previusScreen !== 'gameScreen' && !title) return;
                     onSubmit(gameId, title || topicDetail.title, content);

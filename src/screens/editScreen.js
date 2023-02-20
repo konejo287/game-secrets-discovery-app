@@ -34,7 +34,7 @@ EditScreen.navigationOptions = (props) => {
 
     return {
         title: "Game Notes",
-        headerRight: <TouchableOpacity 
+        headerRight: <TouchableOpacity
                         onPress={() => {
                                 content !== ''?
                                   editTopicNotes(_id, title, content, () => {props.navigation.pop()})

@@ -1,9 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity, Alert } from 'react-native';
 import { Context as GameContext } from '../context/GameContext';
 import { Feather } from '@expo/vector-icons';
 import RightHeader from '../components/RightHeader';
-import SweetAlert from 'react-native-sweet-alert';
 
 const GameScreen = ({ route, navigation }) => {
     const { id, paramLocalState } = route.params;
@@ -31,6 +30,7 @@ const GameScreen = ({ route, navigation }) => {
                     return (
                         <View style={styles.row}>
                             <TouchableOpacity
+                                style={styles.touchableOpacity}
                                 onPress={() =>
                                 navigation.navigate('Edit',
                                     {
@@ -44,19 +44,28 @@ const GameScreen = ({ route, navigation }) => {
                                 }>
                                 <Text style={styles.title}>{item.title}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {
-                              SweetAlert.showAlertWithOptions({
-                                title: '',
-                                subTitle: '',
-                                confirmButtonTitle: 'OK',
-                                confirmButtonColor: '#000',
-                                otherButtonTitle: 'Cancel',
-                                otherButtonColor: '#dedede',
-                                style: 'success',
-                                cancellable: true
-                              },
-                                callback => console.log('callback'));
-                              //deleteGameTopic(gamePost._id, item.title)
+                            <TouchableOpacity style={styles.touchableOpacity} onPress={() => {
+                              Alert.alert('WARNING!', `You're about to erase a topic and all of it's notes.
+                              \r\nIs this OK?`, [
+                                {
+                                  text: 'Cancel',
+                                  onPress: () => console.log('Cancel Pressed'),
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: 'OK', onPress: () =>
+                                    Alert.alert('WARNING!', `Are you really sure?`, [
+                                      {
+                                        text: 'Cancel',
+                                        onPress: () => console.log('Cancel Pressed'),
+                                        style: 'cancel',
+                                      },
+                                      {
+                                        text: 'OK', onPress: () => deleteGameTopic(gamePost._id, item.title)
+                                      },
+                                  ])
+                                },
+                              ]);
                             }}
                               >
                                 <Feather style={styles.icon} name="trash" />
@@ -73,15 +82,22 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 20,
+        height: 70,
         paddingHorizontal: 20,
         borderTopWidth: 1,
         borderColor: 'gray'
     },
+    touchableOpacity: {
+      height: "100%",
+      width: "90%",
+      justifyContent: "center",
+    },
     title: {
+        width: "100%",
         fontSize: 18
     },
     icon: {
+        marginHorizontal: 15,
         fontSize: 24
     }
 });
